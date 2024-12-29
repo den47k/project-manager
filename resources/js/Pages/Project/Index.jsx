@@ -6,7 +6,7 @@ import TextInput from "@/Components/TextInput";
 import SelectInput from "@/Components/SelectInput";
 import TableHeading from "@/Components/TableHeading";
 
-export default function Index({ projects, queryParams = null }) {
+export default function Index({ projects, queryParams = null, success }) {
   queryParams = queryParams || {};
 
   const searchFieldChanged = (name, value) => {
@@ -36,12 +36,27 @@ export default function Index({ projects, queryParams = null }) {
     router.get(route('project.index'), queryParams);
   }
 
+  const deleteProject = (projectId) => {
+    if (!window.confirm('Are you sure you want to delete this project?')) {
+      return;
+    }
+
+    router.delete(route('project.destroy', projectId), {
+      preserveScroll: true
+    });
+  }
+
   return (
     <AuthenticatedLayout
       header={
-        <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
-            Projects
-        </h2>
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
+              Projects
+          </h2>
+          <Link href={route('project.create')} className="bg-emerald-500 py-1 px-3 text-white rounded-lg hover:bg-emerald-600 shadow transition-all">
+            Add new
+          </Link>
+        </div>
       }
     >
 
@@ -49,6 +64,11 @@ export default function Index({ projects, queryParams = null }) {
 
     <div className="py-12">
       <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
+        {success && (
+          <div className="bg-emerald-500 py-2 px-4 text-white rounded-lg shadow mb-4">
+            {success}
+          </div>
+        )}
           <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg dark:bg-gray-800">
               <div className="p-6 text-gray-900 dark:text-gray-100">
                   <div className="overflow-auto">
@@ -149,18 +169,18 @@ export default function Index({ projects, queryParams = null }) {
                             <td className="px-3 py-3">{project.created_at}</td>
                             <td className="px-3 py-3">{project.due_date}</td>
                             <td className="px-3 py-3">{project.created_by.name}</td>
-                            <td className="px-3 py-3">
+                            <td className="px-3 py-3 text-nowrap">
                               <Link
                                 href={route('project.edit', project.id)}
                                 className="font-medium text-blue-600 dark:text-blue-500 hover:underline mx-1">
                                 Edit
                               </Link>
 
-                              <Link
-                                href={route('project.destroy', project.id)}
+                              <button
+                                onClick={e => deleteProject(project.id)}
                                 className="font-medium text-red-600 dark:text-red-500 hover:underline mx-1">
                                 Delete
-                              </Link>
+                              </button>
                             </td>
                           </tr>
                         ))}
