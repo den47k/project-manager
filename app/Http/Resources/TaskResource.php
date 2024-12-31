@@ -8,6 +8,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class TaskResource extends JsonResource
 {
+    public static $wrap = false;
     /**
      * Transform the resource into an array.
      *
@@ -26,6 +27,8 @@ class TaskResource extends JsonResource
             'priority' => $this->priority,
             'image_path' => $this->image_path,
             'project' => new ProjectResource($this->project),
+            'assigned_user_id' => $this->assigned_user_id,
+            'project_id' => $this->project_id,
             'assgned_to' => $this->assignedTo ? new UserResource($this->assignedTo) : null,
             'created_by' => new UserResource($this->createdBy),
             'updated_by' => new UserResource($this->updatedBy),

@@ -5,7 +5,7 @@ import SelectInput from "@/Components/SelectInput";
 import TableHeading from "@/Components/TableHeading";
 import { TASK_STATUS_TEXT_MAP, TASK_STATUS_CLASS_MAP } from "@/constants.jsx";
 
-export default function TasksTable({ tasks, queryParams = null, routeName = 'task.index', projectId }) {
+export default function TasksTable({ tasks, queryParams = null, routeName = 'task.index', taskId }) {
   queryParams = queryParams || {};
 
   const searchFieldChanged = (name, value) => {
@@ -15,7 +15,7 @@ export default function TasksTable({ tasks, queryParams = null, routeName = 'tas
       delete queryParams[name];
     }
 
-    router.get(route(routeName, projectId),
+    router.get(route(routeName, taskId),
       queryParams,
       { preserveScroll: true, }
     );
@@ -35,10 +35,16 @@ export default function TasksTable({ tasks, queryParams = null, routeName = 'tas
       queryParams.sort_direction = 'asc';
     }
 
-    router.get(route(routeName, projectId),
+    router.get(route(routeName, taskId),
       queryParams,
       { preserveScroll: true, }
     );
+  }
+
+
+  const deleteTask = (taskId) => {
+    if (!window.confirm("Are you sure you want to delte the task?")) return;
+    router.delete(route('task.destroy', taskId));
   }
 
   return (
@@ -144,11 +150,11 @@ export default function TasksTable({ tasks, queryParams = null, routeName = 'tas
                     Edit
                   </Link>
 
-                  <Link
-                    href={route('task.destroy', task.id)}
+                  <button
+                    onClick={(e) => deleteTask(task.id)}
                     className="font-medium text-red-600 dark:text-red-500 hover:underline mx-1">
                     Delete
-                  </Link>
+                  </button>
                 </td>
               </tr>
             ))}
