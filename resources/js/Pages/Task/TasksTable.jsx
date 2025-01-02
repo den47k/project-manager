@@ -134,7 +134,11 @@ export default function TasksTable({ tasks, queryParams = null, routeName = 'tas
                 <td className="px-3 py-2">
                   <img src={task.image_path} alt={task.name} className="w-[60px]" />
                 </td>
-                <td className="px-3 py-3">{task.name}</td>
+                <td className="px-3 py-3 text-gray-100 hover:underline">
+                  <Link href={route('task.show', task.id)}>
+                    {task.name}
+                  </Link>
+                </td>
                 <td className="px-3 py-3">
                   <span className={TASK_STATUS_CLASS_MAP[task.status] + " px-3 py-1 rounded-lg text-white"}>
                     {TASK_STATUS_TEXT_MAP[task.status]}

@@ -22,6 +22,8 @@ class Task extends Model
         'updated_by',
     ];
 
+    //relationships
+
     public function project()
     {
         return $this->belongsTo(Project::class);

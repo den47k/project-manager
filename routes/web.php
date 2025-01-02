@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashBoardController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TaskController;
@@ -8,10 +9,10 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 
 Route::middleware(['auth', 'verified'])->group(function() {
-    Route::get('/', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
+    Route::get('/', DashBoardController::class)->name('dashboard');
 
+    Route::get('/task/my-tasks', [TaskController::class, 'tasksByUser'])
+        ->name('task.my-tasks');
     Route::resource('project', ProjectController::class);
     Route::resource('task', TaskController::class);
     Route::resource('user', UserController::class);
